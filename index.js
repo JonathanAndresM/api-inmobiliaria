@@ -89,6 +89,11 @@ app.post("/propiedades", upload.single('file'), (req, res) => {
         // const data = readData();
         const body = req.body;
 
+        // Verificar que `req.file` no sea undefined
+        if (!req.file) {
+            return res.status(400).send("No se ha subido ningun archivo.");
+        }
+
         // Crear una nueva propiedad con los datos recibidos
         const newPropiedad = {
             category: body.category,
@@ -99,7 +104,7 @@ app.post("/propiedades", upload.single('file'), (req, res) => {
             hambiente: body.hambiente,
             zone: body.zone
         };
-        // Simplemente para pruebas: leer y escribir en un archivo JSON
+        // Leer y escribir en un archivo JSON
         let data = readData();
         // Agregar la nueva propiedad a la lista de propiedades
         newPropiedad.id = data.propiedades.length + 1; // Generar un nuevo ID
@@ -107,7 +112,7 @@ app.post("/propiedades", upload.single('file'), (req, res) => {
         //fs.writeFileSync('db.json', JSON.stringify(data, null, 2)); // Guardar en el archivo
         // Guardar los datos actualizados en el archivo db.json
         writeData(data);
-        // Devolver el nuevo libro agregado como respuesta
+        // Devolver la nueva propiedad agregada como respuesta
         //res.json(newPropiedad);
         res.status(200).json(newPropiedad); // Devolver la nueva propiedad creada
     } catch (error) {
