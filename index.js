@@ -1,4 +1,4 @@
-import express, { json } from 'express';
+import express from 'express';
 import fs from "fs";
 import bodyParser from "body-parser";
 import cors from 'cors';
@@ -13,10 +13,10 @@ const app = express();
 
 // Configuración de multer para manejar la carga de archivos
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
+    destination: (req, file, cb) => {
         cb(null, 'imagenes/'); // Directorio donde se guardarán las imágenes
     },
-    filename: function (req, file, cb) {
+    filename: (req, file, cb) => {
         cb(null, file.originalname); // Usar el nombre original del archivo
     }
 });
@@ -31,16 +31,16 @@ app.use(express.static(join(__dirname, 'imagenes')))
 app.use(cors({
     origin: '*',  // Permitir solo peticiones desde este origen
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type'],
 }));
 
 // Ruta para subir imagen con multer
-app.post("/subir-imagen", upload.single('file'), (req, res) => {
+/*app.post("/subir-imagen", upload.single('file'), (req, res) => {
     if (!req.file) {
         return res.status(400).send("No se ha subido ningun archivo.")
     }
     res.send('File uploaded!');
-});
+});*/
 
 
 // Funciones auxiliares para leer y escribir datos
@@ -119,7 +119,6 @@ app.post("/propiedades", upload.single('file'), (req, res) => {
         console.error('Error al crear una nueva propiedad:', error);
         res.status(500).json({ error: error.message });
     }
-    console.log(req.body);
 });
 
 // Ruta para subir imagen
